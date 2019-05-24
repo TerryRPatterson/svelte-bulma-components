@@ -1,49 +1,46 @@
 <li>
 {#if disabled}
   <a href="/" class="pagination-link" disabled>{page}</a>
-{:elseif Number(current) === page}
-  <a href="/" 
-     class="pagination-link is-current" 
-     aria-label="Page {page}" 
-     aria-current="page" 
-     on:click="noop(event)">{page}</a>
+{:else if Number(current) === page}
+  <a href="/"
+     class="pagination-link is-current"
+     aria-label="Page {page}"
+     aria-current="page"
+     on:click|preventDefault>{page}</a>
 {:else}
-  <a href="/" 
-     class="pagination-link" 
-     aria-label="Goto page {page}" 
-     on:click="goto(event, page)">{page}</a>
+  <a href="/"
+     class="pagination-link"
+     aria-label="Goto page {page}"
+     on:click|preventDefault="{goto}">{page}</a>
 {/if}
 </li>
 
 <script>
-export default {
-  data: () => ({
-    current: false,
-    page: 1,
-    total: 10,
-    show: 3,
-    showEllipsis: true
-  }),
-  computed: {
-    disabled: ({ current, page, total }) => {
-      if (Number(current) === 1 && Number(page) === 1) {
-        return true
-      }
-      if (Number(current) === Number(total) && Number(page) === Number(total)) {
-        return true
-      }
-      return false
-    }
-  },
-  methods: {
-    noop (event) {
-      event.preventDefault()
-    },
-    goto (event, page) {
-      event.preventDefault()
-      this.set({ current: page })
-      this.fire('change', page)
-    }
+import { createEventDispatcher } from 'svelte'
+
+const dispatch = createEventDispatcher()
+
+export let current = false
+export let page = 1
+export let total = 10
+export let show = 3
+
+export let showEllipsis = true
+
+let disabled
+
+$: {
+  if (Number(current) === 1 && Number(page) === 1) {
+    disabled = true
   }
+  if (Number(current) === Number(total) && Number(page) === Number(total)) {
+    disabled = true
+  }
+  disabled = false
+}
+
+function goto () {
+  current = page
+  dispatch('change', page)
 }
 </script>

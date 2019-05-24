@@ -1,69 +1,77 @@
-<svelte:window on:click="close()" />
-<nav class="{classes} {class}" role="navigation" aria-label="main navigation">
+<svelte:window on:click="{close}" />
+<nav
+  class="{cssClass}"
+  role="navigation"
+  aria-label="main navigation"
+  class:is-color="{color}"
+  class:is-fixed-top="{fixedTop}"
+  class:is-fixed-bottom="{fixedBottom}"
+  class:is-transparent="{transparent}"
+>
   <div class="navbar-brand">
     <slot name="brand"><!-- brand items go here --></slot>
 
-    <a href="/" role="button" class="navbar-burger{activeClass}" aria-label="menu" aria-expanded="{active}" on:click="toggle(event)">
+    <a
+      href="/"
+      role="button"
+      class="navbar-burger"
+      class:is-active="{active}"
+      aria-label="menu"
+      aria-expanded="{active}"
+      on:click|stopPropagation|preventDefault="{toggle}"
+    >
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
     </a>
   </div>
 
-  <div class="navbar-menu{activeClass}">
+  <div class="navbar-menu" class:is-active="{active}">
     <slot><!-- navbar items --></slot>
   </div>
 
 </nav>
 
 <script>
-export default {
-  data: () => ({
-    active: false,
-    class: '',
-    color: '',
-    fixedTop: false,
-    fixedBottom: false,
-    transparent: false,
-    noBodyClass: false
-  }),
-  computed: {
-    classes: ({ color, fixedTop, fixedBottom, transparent }) => {
-      const classList = ['navbar']
+let active = false
 
-      color && classList.push(`is-${color}`)
-      fixedTop && classList.push('is-fixed-top')
-      fixedBottom && classList.push('is-fixed-bottom')
-      transparent && classList.push('is-transparent')
+export let cssClass = ''
+export let color = ''
+export let fixedTop = false
+export let fixedBottom = false
+export let transparent = false
+export let noBodyClass = false
 
-      return classList.join(' ')
-    },
-    activeClass: ({ active }) => active ? ' is-active' : ''
-  },
-  methods: {
-    close () {
-      this.set({ active: false })
-    },
-    toggle (event) {
-      event.preventDefault()
-      event.stopPropagation()
-      const { active } = this.get()
-      this.set({ active: !active })
+function close () {
+  active = false
+}
+function toggle (event) {
+  active = !active
+}
+
+const body = document.querySelector('body')
+
+$: {
+  if (!noBodyClass) {
+    if (fixedTop) {
+      body.classList.add('has-navbar-fixed-top')
+    } else {
+      body.classList.remove('has-navbar-fixed-top')
     }
-  },
-  onupdate ({ changed, current, previous }) {
-    if (current.noBodyClass) {
-      return
+  } else {
+    body.classList.remove('has-navbar-fixed-top')
+  }
+}
+
+$: {
+  if (!noBodyClass) {
+    if (fixedBottom) {
+      body.classList.add('has-navbar-fixed-bottom')
+    } else {
+      body.classList.remove('has-navbar-fixed-bottom')
     }
-    const body = document.querySelector('body')
-    if (changed.fixedTop) {
-      current.fixedTop ? body.classList.add('has-navbar-fixed-top')
-                       : body.classList.remove('has-navbar-fixed-top')
-    }
-    if (changed.fixedBottom) {
-      current.fixedBottom ? body.classList.add('has-navbar-fixed-bottom')
-                          : body.classList.remove('has-navbar-fixed-bottom')
-    }
+  } else {
+    body.classList.remve('has-nav-bar-fixed-bottom')
   }
 }
 </script>

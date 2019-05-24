@@ -12,8 +12,7 @@ export default [
     },
     plugins: [
       resolve({
-        jsnext: true,
-        main: true
+        mainFields: ['main', 'jsnext']
       }),
       commonjs(),
       svelte({
@@ -30,8 +29,7 @@ export default [
     },
     plugins: [
       resolve({
-        jsnext: true,
-        main: true
+        mainFields: ['main', 'jsnext']
       }),
       commonjs(),
       svelte({

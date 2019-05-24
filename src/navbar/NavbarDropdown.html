@@ -1,42 +1,34 @@
-  <svelte:window on:click="close()" />
-  <div class="navbar-item has-dropdown{activeClass}{hoverableClass}{upClass} {class}">
-    <span class="navbar-link" on:click="toggle(event)">
+  <svelte:window on:click="{close}" />
+  <div
+    class="navbar-item has-dropdown {cssClass}"
+    class:is-active="{active}"
+    class:is-hoverable="{hoverable}"
+    class:has-dropdown-up="{dropup}"
+  >
+    <span class="navbar-link" on:click|stopPropagation="{toggle}">
       {@html label}
     </span>
 
-    <div class="navbar-dropdown{rightClass}{boxedClass}">
+    <div class="navbar-dropdown" class:is-right="{right}" class:is-boxed="{boxed}">
       <slot><!-- dropdown items go here --></slot>
     </div>
   </div>
 
 <script>
-export default {
-  data: () => ({
-    active: false,
-    boxed: false,
-    class: '',
-    hoverable: false,
-    label: '',
-    dropup: false,
-    right: false
-  }),
-  computed: {
-    activeClass: ({ active }) => active ? ' is-active' : '',
-    boxedClass: ({ boxed }) => boxed ? ' is-boxed' : '',
-    hoverableClass: ({ hoverable }) => hoverable ? ' is-hoverable' : '',
-    rightClass: ({ right }) => right ? ' is-right' : '',
-    upClass: ({ dropup }) => dropup ? ' has-dropdown-up' : ''
-  },
-  methods: {
-    close () {
-      this.set({ active: false })
-    },
-    toggle (event) {
-      event.stopPropagation()
-      const { active } = this.get()
-      this.set({ active: !active })
-    }
-  }
+export let cssClass = ''
+
+let active = false
+let boxed = false
+let hoverable = false
+let label = ''
+let dropup = false
+let right = false
+
+function close () {
+  active = false
+}
+function toggle (event) {
+  active = !active
 }
 </script>
 

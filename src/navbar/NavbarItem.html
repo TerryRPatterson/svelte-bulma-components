@@ -1,24 +1,17 @@
 {#if href}
-<a class="navbar-item{activeClass}{expandedClass} {class}" {href}>
+<a class="navbar-item {cssClass}" {href} class:is-active="{active}" class:is-expanded="{expanded}">
   <slot></slot>
 </a>
 {:else}
-<div class="navbar-item{activeClass}{expandedClass} {class}">
+<div class="navbar-item {cssClass}" class:is-active="{active}" class:is-expanded="{expanded}">
   <slot></slot>
 </div>
 {/if}
 
 <script>
-export default {
-  data: () => ({
-    href: false,
-    active: false,
-    class: '',
-    expanded: false
-  }),
-  computed: {
-    activeClass: ({ active }) => active ? ' is-active' : '',
-    expandedClass: ({ expanded }) => expanded ? ' is-expanded' : ''
-  }
-}
+export let cssClass = ''
+export let href = false
+
+let active = false
+let expanded = false
 </script>

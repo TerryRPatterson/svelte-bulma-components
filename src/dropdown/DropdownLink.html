@@ -1,17 +1,17 @@
-<a {href} class="dropdown-item{active ? ' is-active' : ''}" on:click="handleClick(event, href)">
+<a {href} class="dropdown-item" class:is-active="{active}" on:click|preventDefault="{handleClick}">
   <slot></slot>
 </a>
 
 <script>
-export default {
-  data: () => ({
-    active: false
-  }),
-  methods: {
-    handleClick (event, href) {
-      event.preventDefault()
-      this.fire('click', href)
-    }
-  }
+import { createEventDispatcher } from 'svelte'
+
+export let href
+export let active
+
+const dispatch = createEventDispatcher()
+
+function handleClick (event) {
+  event.preventDefault()
+  dispatch('click', href)
 }
 </script>

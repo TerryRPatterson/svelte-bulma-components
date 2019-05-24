@@ -1,7 +1,14 @@
-<svelte:window on:click="close()" />
-<div class="{classes} {class}" on:click="event.stopPropagation()">
+<svelte:window on:click="{close}" />
+<div
+  class="{cssClass} dropdown"
+  on:click|preventDefault
+  class:is-active="{active}"
+  class:is-hoverable="{hoverable}"
+  class:is-right="{right}"
+  class:is-up="{up}"
+>
   <div class="dropdown-trigger">
-    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" on:click="toggle()">
+    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" on:click={toggle}>
       <span>{@html label}</span>
       <span class="icon is-small">
         <i class="fa fa-angle-{icon}" aria-hidden="true"></i>
@@ -17,41 +24,26 @@
 
 <script>
 
-export default {
-  data: () => ({
-    active: false,
-    class: '',
-    hoverable: false,
-    label: '',
-    right: false,
-    up: false
-  }),
-  computed: {
-    icon: ({ active, up }) => {
-      if (up) {
-        return active ? 'down' : 'up'
-      }
-      return active ? 'up' : 'down'
-    },
-    classes: ({ active, hoverable, right, up }) => {
-      const classList = ['dropdown']
+export let hoverable = false
+export let label = ''
+export let right = false
+export let up = false
+export let active = false
+export let cssClass = ''
+export let icon
 
-      active && classList.push('is-active')
-      hoverable && classList.push('is-hoverable')
-      right && classList.push('is-right')
-      up && classList.push('is-up')
-
-      return classList.join(' ')
-    }
-  },
-  methods: {
-    close () {
-      this.set({ active: false })
-    },
-    toggle () {
-      const { active } = this.get()
-      this.set({ active: !active })
-    }
+$: {
+  if (up) {
+    icon = active ? 'down' : 'up'
+  } else {
+    icon = active ? 'up' : 'down'
   }
+}
+
+function close () {
+  active = false
+}
+function toggle () {
+  active = !active
 }
 </script>
