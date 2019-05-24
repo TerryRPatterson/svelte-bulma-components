@@ -1,0 +1,17 @@
+<script>
+import Dropdown from '@/dropdown/Dropdown'
+import DropdownDivder from '@/dropdown/DropdownDivider'
+import DropdownLink from '@/dropdown/DropdownLink'
+import DropdownItem from '@/dropdown/DropdownItem'
+
+export let listener
+
+</script>
+
+<Dropdown label='trigger' hoverable>
+    <DropdownItem>Not clickable</DropdownItem>
+    <DropdownDivder/>
+    <DropdownLink href='Link worked' on:click={({detail}) => listener(detail)}>
+        clickable link
+    </DropdownLink>
+</Dropdown>
