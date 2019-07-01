@@ -1,1 +1,13 @@
-<sc
+<script>
+import Modal from '@/modal/Modal'
+import ModalCard from '@/modal/ModalCard'
+
+export let listener
+export let active
+</script>
+
+<Modal {active} on:close={() => active = false}>
+    <ModalCard {active} on:close={() => active = false}>
+    Modal Card
+    </ModalCard>
+</Modal>

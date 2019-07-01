@@ -5,15 +5,17 @@
   class:is-rounded="{rounded}"
 >
 {#if !noIncremental}
-  {#if Number(current) === 1}
-  <a href="/" class="pagination-previous" disabled>{previous}</a>
+  {#if current === 1}
+  <div class="pagination-previous">
+    {previous}
+  </div>
   {:else}
-  <a href="/" class="pagination-previous" on:click|preventDefault="{() => goto(Number(current) - 1)}">{previous}</a>
+  <a href="#previous_page" class="pagination-previous" on:click|preventDefault="{() => goto(current - 1)}">{previous}</a>
   {/if}
-  {#if Number(current) === Number(total)}
-  <a href="/" class="pagination-next" disabled>{next}</a>
+  {#if current === total}
+  <div class="pagination-next">{next}</div>
   {:else}
-  <a href="/" class="pagination-next" on:click="{() => goto(Number(current) + 1)}">{next}</a>
+  <a href="#next_page" class="pagination-next" on:click|preventDefault="{() => goto(current + 1)}">{next}</a>
   {/if}
 {/if}
 {#if !noList}
@@ -25,7 +27,7 @@
 {#each pages as page}
     <PaginationLink {page} {current} {total} {show} on:change="{setPage}" />
 {/each}
-{#if showRight < (Number(total) - 1)}
+{#if showRight < (total - 1)}
     <li><span class="pagination-ellipsis">&hellip;</span></li>
 {/if}
     <PaginationLink page="{total}" {current} {total} {show} on:change="{setPage}" />
@@ -51,9 +53,6 @@ export let size = ''
 export let previous = 'Previous'
 export let next = 'Next page'
 
-$: alignClass = align ? `is-${align}` : ''
-$: sizeClass = size ? `is-${size}` : ''
-
 let classes
 $: {
   const classList = []
@@ -63,8 +62,8 @@ $: {
 
   classes = classList.join(' ')
 }
-$: showLeft = Number(current) - Math.floor(show / 2)
-$: showRight = Number(current) + Math.floor(show / 2)
+$: showLeft = current - Math.floor(show / 2)
+$: showRight = current + Math.floor(show / 2)
 
 let pages
 
@@ -72,7 +71,7 @@ $: {
   pages = []
   for (let i = showLeft; i <= showRight; i++) {
     if (i > 1 && i < total) {
-      list.push(i)
+      pages.push(i)
     }
   }
 }
